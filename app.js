@@ -7,8 +7,7 @@ const app = express();
 
 const baseURL = "https://msk-url.herokuapp.com/";
 
-const connectionString =
-  "postgres://yzznzysrnnlktr:42856f3c14695d42baff64dff767e1e912d3c520560931c3f0badc7fd4c5dae6@ec2-54-228-209-117.eu-west-1.compute.amazonaws.com:5432/d3r2nfr6adat1p";
+const connectionString = process.env.DATABASE_URL;
 
 const client = new Client({
   connectionString: connectionString,
@@ -98,7 +97,7 @@ app.post("/api/short", (req, res, next) => {
 });
 
 app.use((req, res, next) => {
-  res.sendFile(path.join(__dirname, "WebContent", "index.html"))
-})
+  res.sendFile(path.join(__dirname, "WebContent", "index.html"));
+});
 
 module.exports = app;
