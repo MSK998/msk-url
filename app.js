@@ -92,7 +92,7 @@ app.post("/api/short", (req, res, next) => {
 
     // Sends a response with the short url
     return res.status(201).json({
-      shorturl: baseURL + radix36,
+      shortURL: baseURL + radix36,
     });
   });
 });
