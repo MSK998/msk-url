@@ -5,10 +5,13 @@ const bodyParser = require("body-parser");
 
 const app = express();
 
+// The baseURL used to construct the "shorter" URL
 const baseURL = "https://msk-url.herokuapp.com/";
 
+// Postgres connection URL that contains the username and password
 const connectionString = process.env.DATABASE_URL;
 
+// Creates a new instance of client that uses the connectionString to connect to the Postgres server
 const client = new Client({
   connectionString: connectionString,
   ssl: {
@@ -16,6 +19,7 @@ const client = new Client({
   },
 });
 
+// Connect to the postgres database
 client.connect();
 
 // Checking the connection to the database
@@ -38,7 +42,7 @@ app.get("/:shorturl", (req, res, next) => {
   const urlID = parseInt(req.params.shorturl, 36);
 
   // Construct the query
-  // This should be sanitised
+  // This is sanitised by the pg package
   const query = {
     text: "SELECT * FROM urls WHERE ID = $1",
     values: [urlID],
@@ -64,7 +68,6 @@ app.post("/api/short", (req, res, next) => {
   // Extracts the url to be shortened
   const url = req.body.url;
   // Constructs the SQL query
-  // These queries is not sanitised but definitely should be like with all SQL commands
   const query = {
     text:
       "INSERT INTO urls (url) SELECT CAST($1 AS VARCHAR) WHERE NOT EXISTS (SELECT 1 FROM urls WHERE url=$1)",
@@ -96,6 +99,7 @@ app.post("/api/short", (req, res, next) => {
   });
 });
 
+// Supply the index.js file to the user
 app.use((req, res, next) => {
   res.sendFile(path.join(__dirname, "WebContent", "index.html"));
 });

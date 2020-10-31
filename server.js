@@ -18,6 +18,8 @@ const normalizePort = val => {
   return false;
 };
 
+
+// Some basic error handling for portnumber
 const onError = error => {
   if (error.syscall !== "listen") {
     throw error;
@@ -37,17 +39,21 @@ const onError = error => {
   }
 };
 
+
 const onListening = () => {
   const addr = server.address();
   const bind = typeof port === "string" ? "pipe " + port : "port " + port;
   debug("Listening on " + bind);
 };
 
+// Sets the port number to 3000 if no other port is specified
 const port = normalizePort(process.env.PORT || "3000");
 app.set("port", port);
 
+// Creates an instance of the server using app.js
 const server = http.createServer(app);
 server.on("error", onError);
 server.on("listening", onListening);
+// Listen on the port number that has been set
 server.listen(port);
 console.log("Server started on port: " + port);
